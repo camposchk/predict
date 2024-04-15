@@ -1,0 +1,15 @@
+C:\Users\disrct\Desktop\predict\winforms\obj\Debug\net7.0-windows\winforms.csproj.AssemblyReference.cache
+C:\Users\disrct\Desktop\predict\winforms\obj\Debug\net7.0-windows\winforms.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\disrct\Desktop\predict\winforms\obj\Debug\net7.0-windows\winforms.AssemblyInfoInputs.cache
+C:\Users\disrct\Desktop\predict\winforms\obj\Debug\net7.0-windows\winforms.AssemblyInfo.cs
+C:\Users\disrct\Desktop\predict\winforms\obj\Debug\net7.0-windows\winforms.csproj.CoreCompileInputs.cache
+C:\Users\disrct\Desktop\predict\winforms\bin\Debug\net7.0-windows\winforms.exe
+C:\Users\disrct\Desktop\predict\winforms\bin\Debug\net7.0-windows\winforms.deps.json
+C:\Users\disrct\Desktop\predict\winforms\bin\Debug\net7.0-windows\winforms.runtimeconfig.json
+C:\Users\disrct\Desktop\predict\winforms\bin\Debug\net7.0-windows\winforms.dll
+C:\Users\disrct\Desktop\predict\winforms\bin\Debug\net7.0-windows\winforms.pdb
+C:\Users\disrct\Desktop\predict\winforms\obj\Debug\net7.0-windows\winforms.dll
+C:\Users\disrct\Desktop\predict\winforms\obj\Debug\net7.0-windows\refint\winforms.dll
+C:\Users\disrct\Desktop\predict\winforms\obj\Debug\net7.0-windows\winforms.pdb
+C:\Users\disrct\Desktop\predict\winforms\obj\Debug\net7.0-windows\winforms.genruntimeconfig.cache
+C:\Users\disrct\Desktop\predict\winforms\obj\Debug\net7.0-windows\ref\winforms.dll
