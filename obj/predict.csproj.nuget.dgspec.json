@@ -1,30 +1,30 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\disrct\\Desktop\\predict\\predict.csproj": {}
+    "C:\\Users\\disrct\\predict\\predict.csproj": {}
   },
   "projects": {
-    "C:\\Users\\disrct\\Desktop\\predict\\predict.csproj": {
+    "C:\\Users\\disrct\\predict\\predict.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\disrct\\Desktop\\predict\\predict.csproj",
+        "projectUniqueName": "C:\\Users\\disrct\\predict\\predict.csproj",
         "projectName": "predict",
-        "projectPath": "C:\\Users\\disrct\\Desktop\\predict\\predict.csproj",
+        "projectPath": "C:\\Users\\disrct\\predict\\predict.csproj",
         "packagesPath": "C:\\Users\\disrct\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\disrct\\Desktop\\predict\\obj\\",
+        "outputPath": "C:\\Users\\disrct\\predict\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\disrct\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
-          "net7.0-windows"
+          "net8.0"
         ],
         "sources": {
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net7.0-windows7.0": {
-            "targetAlias": "net7.0-windows",
+          "net8.0": {
+            "targetAlias": "net8.0",
             "projectReferences": {}
           }
         },
@@ -35,8 +35,14 @@
         }
       },
       "frameworks": {
-        "net7.0-windows7.0": {
-          "targetAlias": "net7.0-windows",
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "pythonnet": {
+              "target": "Package",
+              "version": "[3.0.3, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -51,12 +57,9 @@
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
-            },
-            "Microsoft.WindowsDesktop.App.WindowsForms": {
-              "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.315\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.104/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

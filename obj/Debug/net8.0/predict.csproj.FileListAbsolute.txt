@@ -1,0 +1,6 @@
+C:\Users\disrct\predict\obj\Debug\net8.0\predict.csproj.AssemblyReference.cache
+C:\Users\disrct\predict\obj\Debug\net8.0\predict.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\disrct\predict\obj\Debug\net8.0\predict.AssemblyInfoInputs.cache
+C:\Users\disrct\predict\obj\Debug\net8.0\predict.AssemblyInfo.cs
+C:\Users\disrct\predict\obj\Debug\net8.0\predict.csproj.CoreCompileInputs.cache
+C:\Users\disrct\predict\obj\Debug\net8.0\predict.sourcelink.json

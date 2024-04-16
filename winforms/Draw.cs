@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -6,31 +7,45 @@ public partial class Draw : Form
     private PictureBox pb;
     private Graphics g;
     private Point previousPoint;
-    private Color color = Color.Black; 
+    private Color color = Color.Black;
+    private Button clearButton;
+    private Button colorButton;
+    private Button registerButton;
 
     public Draw()
     {
-        InitializeComponent();
+        SetupUI();
     }
 
-    private void InitializeComponent()
+    private void SetupUI()
     {
-        WindowState = FormWindowState.Maximized;
-        BackColor = Color.White;
+        this.FormBorderStyle = FormBorderStyle.None;
+        this.WindowState = FormWindowState.Maximized;
+        this.Font = new Font("Arial", 12, FontStyle.Bold);
+        this.ForeColor = Color.White;
+        this.BackColor = Color.Black;
 
         pb = new PictureBox
         {
-            Dock = DockStyle.Fill
+            Size = new Size(1100, 550),
+            Location = new Point(400, 300),
+            BackColor = Color.White,
+            Dock = DockStyle.None
         };
-        
+
         Load += (o, e) =>
         {
-            Bitmap bitmap = new(pb.Width, pb.Height);
+            Bitmap bitmap = new Bitmap(pb.Width, pb.Height);
 
             g = Graphics.FromImage(bitmap);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
 
             this.pb.Image = bitmap;
+        };
+
+        pb.Paint += (o, e) =>
+        {
+            ControlPaint.DrawBorder(e.Graphics, pb.ClientRectangle, Color.White, ButtonBorderStyle.Solid);
         };
 
         pb.MouseDown += (o, e) =>
@@ -49,33 +64,61 @@ public partial class Draw : Form
                 g.DrawLine(pen, previousPoint, e.Location);
                 previousPoint = e.Location;
             }
-            pb.Invalidate(); 
+            pb.Invalidate();
         };
 
-        KeyDown += (o, e) =>
+        clearButton = new Button
         {
-            switch (e.KeyCode)
-            {
-                case Keys.Space:
-                    ClearCanvas();
-                    break;
-                case Keys.Q:
-                    OpenColorDialog();
-                    break;
-            }
+            Text = "Limpar",
+            Size = new Size(80, 30),
+            Location = new Point(pb.Right + 10, pb.Top)
         };
 
+        clearButton.Click += (o, e) =>
+        {
+            ClearCanvas();
+        };
+
+        colorButton = new Button
+        {
+            Text = "Cor",
+            Size = new Size(80, 30),
+            Location = new Point(pb.Right + 10, clearButton.Bottom + 10)
+        };
+
+        colorButton.Click += (sender, e) =>
+        {
+            OpenColorDialog();
+        };
+
+        registerButton = new Button
+        {
+            Text = "Nunca acessou?",
+            Size = new Size(200, 30),
+            Location = new Point(colorButton.Right + 100, clearButton.Bottom + 700) 
+        };
+
+        registerButton.Click += (o, e) =>
+        {
+            OpenRegisterForm();
+        };
 
         Controls.Add(pb);
+        Controls.Add(clearButton);
+        Controls.Add(colorButton);
+        Controls.Add(registerButton);
     }
 
     private void ClearCanvas()
     {
-        using (Graphics g = Graphics.FromImage(pb.Image))
+        if (pb.Image != null)
         {
-            g.Clear(Color.White);
+            using (Graphics g = Graphics.FromImage(pb.Image))
+            {
+                g.Clear(Color.White);
+            }
+            pb.Invalidate();
         }
-        pb.Invalidate(); 
     }
 
     private void OpenColorDialog()
@@ -87,6 +130,13 @@ public partial class Draw : Form
                 color = colorDialog.Color;
             }
         }
+    }
+
+    private void OpenRegisterForm()
+    {
+        Register registerForm = new Register();
+        registerForm.Show();
+        this.Hide();
     }
 }
 
