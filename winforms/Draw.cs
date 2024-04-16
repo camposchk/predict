@@ -60,7 +60,7 @@ public partial class Draw : Form
         {
             if (e.Button == MouseButtons.Left)
             {
-                Pen pen = new Pen(color);
+                Pen pen = new Pen(color, 5);
                 g.DrawLine(pen, previousPoint, e.Location);
                 previousPoint = e.Location;
             }

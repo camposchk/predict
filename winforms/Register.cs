@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.IO;
 
 public partial class Register : Form
 {
@@ -10,9 +11,13 @@ public partial class Register : Form
     private PictureBox signaturePictureBox;
     private Label assinatura;
     private Graphics g;
+    private PictureBox pb;
+
     private Point previousPoint;
     private Pen pen;
     private Button clearButton;
+    private Bitmap canvasImage;
+
     public Register()
     {
         SetupUI();
@@ -21,6 +26,8 @@ public partial class Register : Form
 
     private void SetupUI()
     {
+        canvasImage = new Bitmap(500, 400);
+
         nameLabel = new Label
         {
             Text = "Nome:",
@@ -72,14 +79,16 @@ public partial class Register : Form
         signaturePictureBox.MouseUp += SignaturePictureBox_MouseUp;
         signaturePictureBox.Paint += SignaturePictureBox_Paint;
 
-        pen = new Pen(Color.Black, 2);
+        pen = new Pen(Color.Black, 5);
 
         previousPoint = Point.Empty;
     }
 
     private void ClearCanvas()
     {
-        signaturePictureBox.Image = new Bitmap(signaturePictureBox.Width, signaturePictureBox.Height);
+        g = Graphics.FromImage(canvasImage);
+        g.Clear(Color.White);
+        signaturePictureBox.Invalidate(); // Refresh the PictureBox
     }
 
     private void SetupForm()
@@ -134,9 +143,10 @@ public partial class Register : Form
     {
         if (e.Button == MouseButtons.Left)
         {
-            g = signaturePictureBox.CreateGraphics();
+            g = Graphics.FromImage(canvasImage);
             g.DrawLine(pen, previousPoint, e.Location);
             previousPoint = e.Location;
+            signaturePictureBox.Invalidate(); // Refresh the PictureBox
         }
     }
 
@@ -151,40 +161,33 @@ public partial class Register : Form
 
     private void SignaturePictureBox_Paint(object sender, PaintEventArgs e)
     {
-        if (g != null)
-        {
-            e.Graphics.DrawLine(pen, previousPoint, previousPoint);
-        }
+        e.Graphics.DrawImage(canvasImage, Point.Empty);
     }
 
     private void DrawForm()
     {
-        //     if (string.IsNullOrWhiteSpace(nome.Text) || signaturePictureBox.Image == null)
-        //     {
-        //         MessageBox.Show("Por favor, preencha todos os campos antes de salvar.", "Campos Incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //         return;
-        //     }
-        //     string nomeDigitado = nome.Text;
-        //     Image assinaturaImage = (Image)signaturePictureBox.Image.Clone();
+        string nomeDigitado = nome.Text.Trim();
+        if (string.IsNullOrWhiteSpace(nomeDigitado) || canvasImage == null)
+        {
+            MessageBox.Show("Por favor, preencha todos os campos antes de salvar.", "Campos Incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
 
-        //     string diretorio = Path.GetDirectoryName(Application.ExecutablePath);
-        //     string pastaDados = Path.Combine(diretorio, "Dados");
+        string filePath = "./pastaPessoa/nomeDigitado.png";
 
-        //     if (!Directory.Exists(pastaDados))
-        //     {
-        //         Directory.CreateDirectory(pastaDados);
-        //     }
-
-        //     string pathNome = Path.Combine(pastaDados, "Nome.txt");
-        //     File.WriteAllText(pathNome, nomeDigitado);
-
-        //     string pathAssinatura = Path.Combine(pastaDados, "Assinatura.png");
-        //     assinaturaImage.Save(pathAssinatura, System.Drawing.Imaging.ImageFormat.Png);
-
-        //     MessageBox.Show("Dados salvos com sucesso.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        try
+        {
+            signaturePictureBox .Image.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
+            MessageBox.Show("Dados salvos com sucesso.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Erro ao salvar a imagem: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
 
         Draw drawForm = new Draw();
         drawForm.Show();
         this.Hide();
     }
+
 }
