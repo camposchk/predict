@@ -1,39 +1,51 @@
 import os
 from tensorflow.keras import models, layers, activations, optimizers, utils, losses, initializers, metrics, callbacks, regularizers
 
-epochs = 300
-batch_size = 32
-patience = 130
-learning_rate = 0.0001
+epochs = 150 
+batch_size = 64 
+patience = 10 
+learning_rate = 0.001
 model_path = 'checkpoints/model.keras'
 exists = os.path.exists(model_path)
 
-model = models.load_model(model_path) \
-    if exists \
+model = (
+    models.load_model(model_path)
+    if exists
     else models.Sequential([
         layers.Resizing(32, 32),
         layers.Rescaling(1.0/255),
-        layers.Conv2D(64, (7, 7),
+        layers.Conv2D(64, (3, 3),
             activation = 'relu',
             kernel_initializer = initializers.RandomNormal()
         ),
+        layers.MaxPooling2D((2, 2)),
+        layers.Conv2D(128, (3, 3),
+            activation = 'relu',
+            kernel_initializer = initializers.RandomNormal()
+        ),
+        layers.MaxPooling2D((2, 2)),
+        layers.Conv2D(256, (3, 3),
+            activation = 'relu',
+            kernel_initializer = initializers.RandomNormal()
+        ),
+        layers.MaxPooling2D((2, 2)),
         layers.Flatten(),
-        layers.BatchNormalization(),
-        layers.GaussianNoise(0.5),
-        layers.Dense(64,
+        layers.Dropout(0.5),
+        layers.Dense(512,
             activation = 'relu',
             kernel_initializer = initializers.RandomNormal()
         ),
         layers.Dropout(0.5),
-        layers.Dense(32,
-            activation = 'sigmoid',
+        layers.Dense(256,
+            activation = 'relu',
             kernel_initializer = initializers.RandomNormal()
         ),
         layers.Dense(62,
             activation = 'softmax',
             kernel_initializer = initializers.RandomNormal()
         )
-    ])
+        ])
+)
 
 if exists:
     model.summary()

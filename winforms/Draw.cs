@@ -45,11 +45,16 @@ public partial class Draw : Form
         {
             if (e.Button == MouseButtons.Left)
             {
-                Pen pen = new Pen(color);
+                Pen pen = new Pen(color, 5);
                 g.DrawLine(pen, previousPoint, e.Location);
                 previousPoint = e.Location;
             }
             pb.Invalidate(); 
+        };
+
+        pb.MouseUp += (o, e) =>
+        {
+            save();
         };
 
         KeyDown += (o, e) =>
@@ -75,6 +80,8 @@ public partial class Draw : Form
         {
             g.Clear(Color.White);
         }
+
+        save();
         pb.Invalidate(); 
     }
 
@@ -87,6 +94,12 @@ public partial class Draw : Form
                 color = colorDialog.Color;
             }
         }
+    }
+
+    private void save()
+    {
+        string filePath = "../test/imagem.png";
+        pb.Image.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
     }
 }
 
