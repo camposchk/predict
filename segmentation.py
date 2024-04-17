@@ -2,8 +2,6 @@ import cv2
 import numpy as np
 import os
 
-img = cv2.imread('test/imagem.png') 
-
 def flood_fill_segmentation(image, seed_point):
     segmented_img = image.copy()
     mask = np.zeros((image.shape[0] + 2, image.shape[1] + 2), np.uint8)
@@ -31,33 +29,37 @@ def limpar_arquivos_antigos():
     for arquivo in arquivos_antigos:
         os.remove(os.path.join('test', arquivo))
 
-if img is None:
-    print('Erro ao carregar a imagem.')
-    exit()
-
-segmented_img = flood_fill_segmentation(img, (0, 0))
-contours = find_contours(segmented_img)
-img_with_rectangles = img.copy()
-draw_rectangles(img_with_rectangles, contours)
-
-limpar_arquivos_antigos()
-
-contours_sorted = sorted(contours, key=lambda c: cv2.boundingRect(c)[0])
-
-
-for i, contour in enumerate(contours_sorted):
-    x, y, w, h = cv2.boundingRect(contour)
+def processar_imagem(nome_arquivo_imagem):
+    img = cv2.imread(nome_arquivo_imagem) 
     
-    cropped_img = img[y:y+h, x:x+w]
+    if img is None:
+        print('Erro ao carregar a imagem.')
+        return
+    
+    segmented_img = flood_fill_segmentation(img, (0, 0))
+    contours = find_contours(segmented_img)
+    img_with_rectangles = img.copy()
+    draw_rectangles(img_with_rectangles, contours)
 
-    border_size = 10
-    cropped_img_with_border = cv2.copyMakeBorder(cropped_img, border_size, border_size, border_size, border_size, cv2.BORDER_CONSTANT, value=(255, 255, 255))
+    limpar_arquivos_antigos()
 
-    cropped_img_with_border_resized = cv2.resize(cropped_img_with_border, (128, 128))
+    contours_sorted = sorted(contours, key=lambda c: cv2.boundingRect(c)[0])
 
-    cv2.imwrite(f'test/img_cropped{i}.png', cropped_img_with_border_resized)
+    for i, contour in enumerate(contours_sorted):
+        x, y, w, h = cv2.boundingRect(contour)
+        
+        cropped_img = img[y:y+h, x:x+w]
 
-cv2.imshow('Imagem com retangulos', img_with_rectangles)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+        border_size = 50
+        cropped_img_with_border = cv2.copyMakeBorder(cropped_img, border_size, border_size, border_size, border_size, cv2.BORDER_CONSTANT, value=(255, 255, 255))
+
+        cropped_img_with_border_resized = cv2.resize(cropped_img_with_border, (128, 128))
+
+        cv2.imwrite(f'test/img_cropped{i}.png', cropped_img_with_border_resized)
+
+    cv2.imshow('Imagem com retangulos', img_with_rectangles)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    
+processar_imagem('test/imagem.png')
 

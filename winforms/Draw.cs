@@ -11,6 +11,9 @@ public partial class Draw : Form
     private Button clearButton;
     private Button colorButton;
     private Button registerButton;
+    private Label titulo;
+    public string Word;
+    private string serverUrl = "http://127.0.0.1:5000/cv";
 
     public Draw()
     {
@@ -24,6 +27,16 @@ public partial class Draw : Form
         this.Font = new Font("Arial", 12, FontStyle.Bold);
         this.ForeColor = Color.White;
         this.BackColor = Color.Black;
+
+        titulo = new Label
+        {
+            Text = Word,
+            AutoSize = true,
+            Font = new Font("Arial", 50, FontStyle.Bold),
+            Location = new Point(860, 200),
+            Dock = DockStyle.None
+        };
+
 
         pb = new PictureBox
         {
@@ -70,6 +83,7 @@ public partial class Draw : Form
         pb.MouseUp += (o, e) =>
         {
             save();
+            Connect(serverUrl, "teste", titulo);
         };
 
         KeyDown += (o, e) =>
@@ -131,6 +145,7 @@ public partial class Draw : Form
         Controls.Add(clearButton);
         Controls.Add(colorButton);
         Controls.Add(registerButton);
+        Controls.Add(titulo);
     }
 
     private void ClearCanvas()
@@ -170,6 +185,30 @@ public partial class Draw : Form
         Register registerForm = new Register();
         registerForm.Show();
         this.Hide();
+    }
+
+    static async Task Connect(string serverUrl, string message, Label label)
+    {
+        try
+        {
+            using HttpClient client = new HttpClient();
+            var content = new StringContent(message, System.Text.Encoding.UTF8, "text/plain");
+            var response = await client.PostAsync(serverUrl, content);
+
+            response.EnsureSuccessStatusCode();
+
+            string word = await response.Content.ReadAsStringAsync();
+            label.Invoke((MethodInvoker)delegate {
+                label.Text = word;
+            });
+        }
+        catch (HttpRequestException e)
+        {
+            Console.WriteLine($"HttpRequestException: {e.Message}");
+        }
+
+        Console.WriteLine("\n Press Enter to continue...");
+        Console.Read();
     }
 }
 
