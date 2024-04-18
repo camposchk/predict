@@ -9,11 +9,13 @@ public partial class Draw : Form
     private Point previousPoint;
     private Color color = Color.Black;
     private Button clearButton;
+    private Button correctButton;
     private Button colorButton;
     private Button registerButton;
     private Label titulo;
+    private Label corrigido;
     public string Word;
-    private string serverUrl = "http://127.0.0.1:5000/cv";
+    private string serverUrl;
 
     public Draw()
     {
@@ -37,6 +39,15 @@ public partial class Draw : Form
             Dock = DockStyle.None
         };
 
+        corrigido = new Label
+        {
+            Text = Word,
+            AutoSize = true,
+            Font = new Font("Arial", 20, FontStyle.Bold),
+            Location = new Point(950, titulo.Top - 50),
+            Dock = DockStyle.None,
+            ForeColor = Color.Green
+        };
 
         pb = new PictureBox
         {
@@ -83,6 +94,9 @@ public partial class Draw : Form
         pb.MouseUp += (o, e) =>
         {
             save();
+
+            serverUrl = "http://127.0.0.1:5000/cv";
+
             Connect(serverUrl, "teste", titulo);
         };
 
@@ -129,6 +143,20 @@ public partial class Draw : Form
             OpenColorDialog();
         };
 
+        correctButton = new Button
+        {
+            Text = "Corrigir",
+            Size = new Size(80, 30),
+            Location = new Point(pb.Right + 10, colorButton.Bottom + 10)
+        };
+
+        correctButton.Click += (sender, e) =>
+        {
+            serverUrl = "http://127.0.0.1:5000/cv/corrigir";
+
+            Connect(serverUrl, "teste", corrigido);
+        };
+
         registerButton = new Button
         {
             Text = "Nunca acessou?",
@@ -144,8 +172,10 @@ public partial class Draw : Form
         Controls.Add(pb);
         Controls.Add(clearButton);
         Controls.Add(colorButton);
+        Controls.Add(correctButton);
         Controls.Add(registerButton);
         Controls.Add(titulo);
+        Controls.Add(corrigido);
     }
 
     private void ClearCanvas()

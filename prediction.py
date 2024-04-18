@@ -1,32 +1,8 @@
-# import requests
-
-# def corrigir_ortografia(frase):
-#     url = 'https://api.languagetool.org/v2/check'
-#     payload = {
-#         'text': frase,
-#         'language': 'pt-BR',  
-#     }
-#     proxies = {
-#         'http': 'https://disrct:etsds10240305@rb-proxy-ca1.bosch.com',
-#         'https': 'https://disrct:etsds10240305@rb-proxy-ca1.bosch.com'
-#     }
-#     response = requests.post(url, data=payload, proxies=proxies)
-#     data = response.json()
-#     correcoes = []
-#     for match in data['matches']:
-#         correcoes.append({
-#             'mensagem': match['message'],
-#             'correcao': match['replacements'][0] if match['replacements'] else '',
-#             'posicao_inicio': match['offset'],
-#             'posicao_fim': match['offset'] + match['length']
-#         })
-#     return correcoes
-
-
 from flask import Flask, request
 
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras import models
+from spellchecker import SpellChecker
 import numpy as np
 import os
 import cv2
@@ -92,7 +68,6 @@ def processar_imagem(nome_arquivo_imagem):
 
         cv2.imwrite(f'test/img_cropped{i}.png', cropped_img_with_border_resized)
 
-    # cv2.imshow('Imagem com retangulos', img_with_rectangles)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
@@ -187,29 +162,37 @@ def prever_imagem():
     print("Palavra prevista:", predicted_word)       
     return predicted_word
 
-# Corrigir a palavra prevista
-# correcoes_palavra_prevista = corrigir_ortografia(predicted_word)
-# if correcoes_palavra_prevista:
-#     nova_palavra_prevista = correcoes_palavra_prevista[0]['correcao']
-#     print("Palavra prevista corrigida:", nova_palavra_prevista)
-# else:
-#     print("Não foram encontradas correções para a palavra prevista.")
+
+def corretor_ortografico(palavra):
+    spell = SpellChecker(language='pt')
+    palavras = palavra.split()
     
-# print("Classe prevista:", predicted_class_name)
-# print("Probabilidade:", predicted_probability)
+    palavras_corrigidas = []
+    for palavra in palavras:
+        palavra_corrigida = spell.correction(palavra)
+        palavras_corrigidas.append(palavra_corrigida)
+        
+    print("Palavra prevista:", palavra)   
+    print("Palavra corrigida:", palavras_corrigidas)   
+    
+    return ' '.join(palavras_corrigidas)
 
-# print("Palavra prevista:", predicted_word)
-
-# print(predictions)
 
 @app.route('/cv', methods=['POST'])
 def predict():
     processar_imagem('test/imagem.png')
     palavra = prever_imagem()
     
-    print(palavra)
-    
     return palavra
+
+@app.route('/cv/corrigir', methods=['POST'])
+def correct():
+    processar_imagem('test/imagem.png')
+    palavra = prever_imagem()
+    
+    correcao = corretor_ortografico(palavra)
+    
+    return correcao
     
 if __name__ == '__main__':
     app.run(debug=True)
